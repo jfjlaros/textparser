@@ -3,42 +3,64 @@
 #include "textparser.h"
 
 
+void TextParser::consume_(char** line) {
+  for (char const *c = delimiter_; *c; c++) {
+    if (not **line or **line != *c) {
+      return;
+    }
+    (*line)++;
+  }
+}
+
+
 /*! Constructor.
  *
  * \param delimiter Field delimiter.
  */
-TextParser::TextParser(char const* delimiter) : delimiter_(delimiter) {}
+TextParser::TextParser(char const* delimiter)
+  : delimiter_(delimiter), eol_("") {}
+
+/*! Constructor.
+ *
+ * \param delimiter Field delimiter.
+ * \param end Line delimiter.
+ */
+TextParser::TextParser(char const* delimiter, char const* eol)
+  : delimiter_(delimiter), eol_(eol) {}
 
 
 /*! Parse an integer.
  *
  * \param result Result.
- * \param endptr Pointer to C string.
+ * \param line Pointer to C string.
  */
-void TextParser::parse(int& result, char** endptr) {
-  result = strtol(*endptr, endptr, 10);
+void TextParser::parse(int& result, char** line) {
+  result = strtol(*line, line, 10);
 }
 
 /*! Parse a double.
  *
  * \param result Result.
- * \param endptr Pointer to C string.
+ * \param line Pointer to C string.
  */
-void TextParser::parse(double& result, char** endptr) {
-  result = strtod(*endptr, endptr);
+void TextParser::parse(double& result, char** line) {
+  result = strtod(*line, line);
 }
 
 /*! Parse a C string.
  *
  * \param result Result.
- * \param endptr Pointer to C string.
+ * \param line Pointer to C string.
  */
-void TextParser::parse(char* result, char** endptr) {
-  char* end = strstr(*endptr, delimiter_);
-  while (**endptr and *endptr != end) {
-    *result = **endptr;
+void TextParser::parse(char* result, char** line) {
+  char* end = strstr(*line, delimiter_);
+  if (not end and *eol_) {
+    end = strstr(*line, eol_);
+  }
+  while (**line and *line != end) {
+    *result = **line;
     result++;
-    (*endptr)++;
+    (*line)++;
   }
   *result = 0;
 }
