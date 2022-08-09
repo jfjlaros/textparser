@@ -29,15 +29,6 @@ TextParser::TextParser(char const* delimiter, char const* eol)
   : delimiter_(delimiter), eol_(eol) {}
 
 
-/*! Parse an integer.
- *
- * \param result Result.
- * \param line Pointer to C string.
- */
-void TextParser::parse(int& result, char** line) {
-  result = strtol(*line, line, 10);
-}
-
 /*! Parse a double.
  *
  * \param result Result.
@@ -45,6 +36,15 @@ void TextParser::parse(int& result, char** line) {
  */
 void TextParser::parse(double& result, char** line) {
   result = strtod(*line, line);
+}
+
+/*! Parse a float.
+ *
+ * \param result Result.
+ * \param line Pointer to C string.
+ */
+void TextParser::parse(float& result, char** line) {
+  result = strtof(*line, line);
 }
 
 /*! Parse a C string.

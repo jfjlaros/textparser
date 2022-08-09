@@ -14,12 +14,36 @@ TEST_CASE("Integer", "[basic]") {
   REQUIRE(a == 3);
 }
 
+TEST_CASE("Short unsigned integer", "[basic]") {
+  short unsigned int a;
+  char* line = const_cast<char*>("3");
+  parser.parse(a, &line);
+
+  REQUIRE(a == 3);
+}
+
+TEST_CASE("Long long integer", "[basic]") {
+  long long int a;
+  char* line = const_cast<char*>("3");
+  parser.parse(a, &line);
+
+  REQUIRE(a == 3);
+}
+
 TEST_CASE("Double", "[basic]") {
   double a;
   char* line = const_cast<char*>("3.1");
   parser.parse(a, &line);
 
   REQUIRE(a == 3.1);
+}
+
+TEST_CASE("Float", "[basic]") {
+  float a;
+  char* line = const_cast<char*>("3.1");
+  parser.parse(a, &line);
+
+  REQUIRE(a == 3.1f);
 }
 
 TEST_CASE("String", "[basic]") {
