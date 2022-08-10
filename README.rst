@@ -26,6 +26,13 @@ Line based text parser for Arduino.
 
 This library provides a simple way to parse line based data.
 
+**Features:**
+
+- Easy to use.
+- Works with all types of delimiters and line endings.
+- Tiny overhead compared to dedicated solutions.
+- Type safe.
+
 Please see ReadTheDocs_ for the latest documentation.
 
 
@@ -41,12 +48,6 @@ more than one symbol.
 
     TextParser parser(", ");  // Delimiter is a comma followed by a space.
 
-Optionally, an end of line string can be provided when needed.
-
-.. code-block:: cpp
-
-    TextParser parser(", ", "\r\n");  // Strip end of line from strings.
-
 If all fields are of the same type, we can use an array.
 
 .. code-block:: cpp
@@ -58,7 +59,7 @@ If the fields have different types, we can use multiple variables.
 
 .. code-block:: cpp
 
-    char a[10];
+    char a[4];
     int b;
     double c;
     parser.parseLine("one, 2, 3.4", a, b, c);
