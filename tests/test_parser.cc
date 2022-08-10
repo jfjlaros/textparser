@@ -46,7 +46,15 @@ TEST_CASE("Float", "[basic]") {
   REQUIRE(a == 3.1f);
 }
 
-TEST_CASE("String", "[basic]") {
+TEST_CASE("Char", "[basic]") {
+  char a;
+  char* line = const_cast<char*>("a");
+  parser.parse(a, &line);
+
+  REQUIRE(a == 'a');
+}
+
+TEST_CASE("C string", "[basic]") {
   char a[10];
   char* line = const_cast<char*>("three");
   parser.parse(a, &line);
@@ -85,12 +93,14 @@ TEST_CASE("Line with only strings", "[line]") {
 TEST_CASE("Line with mixed types", "[line]") {
   char a[10];
   int b;
-  double c;
-  parser.parseLine("three, 1, 4.1", a, b, c);
+  char c;
+  double d;
+  parser.parseLine("three, 1, f, 1.5", a, b, c, d);
 
   REQUIRE(not strcmp(a, "three"));
   REQUIRE(b == 1);
-  REQUIRE(c == 4.1);
+  REQUIRE(c == 'f');
+  REQUIRE(d == 1.5);
 }
 
 

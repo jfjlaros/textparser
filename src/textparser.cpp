@@ -1,5 +1,3 @@
-#include <Arduino.h>
-
 #include "textparser.h"
 
 
@@ -23,7 +21,7 @@ TextParser::TextParser(char const* delimiter)
 /*! Constructor.
  *
  * \param delimiter Field delimiter.
- * \param end Line delimiter.
+ * \param eol Line delimiter.
  */
 TextParser::TextParser(char const* delimiter, char const* eol)
   : delimiter_(delimiter), eol_(eol) {}
@@ -44,7 +42,19 @@ void TextParser::parse(double& result, char** line) {
  * \param line Pointer to C string.
  */
 void TextParser::parse(float& result, char** line) {
-  result = strtof(*line, line);
+  result = strtod(*line, line);
+}
+
+/*! Parse a char.
+ *
+ * \param result Result.
+ * \param line Pointer to C string.
+ */
+void TextParser::parse(char& result, char** line) {
+  result = **line;
+  if (**line) {
+    (*line)++;
+  }
 }
 
 /*! Parse a C string.

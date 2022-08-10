@@ -1,0 +1,6 @@
+docs/xml
+examples/*/Makefile
+examples/*/build/
+src/*o
+tests/*.o
+tests/run_tests

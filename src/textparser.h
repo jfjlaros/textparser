@@ -1,5 +1,8 @@
 #pragma once
 
+#include <stdlib.h>
+#include <string.h>
+
 
 /*! Line based text parser. */
 class TextParser {
@@ -17,11 +20,12 @@ public:
 
   void parse(double&, char**);
   void parse(float&, char**);
+  void parse(char&, char**);
   void parse(char*, char**);
-  template <class T, size_t N>
-    void parse(T (&)[N], char**);
   template <class T>
     void parse(T&, char**);
+  template <class T, size_t N>
+    void parse(T (&)[N], char**);
 
   template <class... Args>
     void parseLine(char const*, Args&...);
@@ -38,6 +42,16 @@ void TextParser::parseLine_(char** line, H& head, Tail&... tail) {
 }
 
 
+/*! Parse an integer type.
+ *
+ * \param result Result.
+ * \param line Pointer to C string.
+ */
+template <class T>
+void TextParser::parse(T& result, char** line) {
+  result = strtol(*line, line, 10);
+}
+
 /*! Parse an array.
  *
  * \param result Result.
@@ -49,16 +63,6 @@ void TextParser::parse(T (&result)[N], char** line) {
     parse(result[i], line);
     consume_(line);
   }
-}
-
-/*! Parse an integer type.
- *
- * \param result Result.
- * \param line Pointer to C string.
- */
-template <class T>
-void TextParser::parse(T& result, char** line) {
-  result = strtoll(*line, line, 10);
 }
 
 

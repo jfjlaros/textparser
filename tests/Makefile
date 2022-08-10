@@ -1,13 +1,12 @@
 EXEC := run_tests
 MAIN := test_lib
 TESTS := test_parser
-FIXTURES := arduino-serial-fixture/src/Arduino
+FIXTURES :=
 LIBS := ../src/textparser
 
 
 CC := g++
-CC_ARGS := -std=c++11 -Wall -Wextra -pedantic -Wno-pmf-conversions \
-  -I arduino-serial-fixture/src
+CC_ARGS := -std=c++11 -Wall -Wextra -pedantic -I arduino-serial-fixture/src
 
 
 OBJS := $(addsuffix .o, $(TESTS) $(FIXTURES) $(LIBS))
