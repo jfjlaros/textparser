@@ -1,3 +1,4 @@
+*.swp
 docs/xml
 examples/*/Makefile
 examples/*/build/
