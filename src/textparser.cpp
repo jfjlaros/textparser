@@ -10,13 +10,21 @@ void TextParser::consume_(char** line) {
   }
 }
 
+char* TextParser::findEnd_(char* line) {
+  char* end = strstr(line, delimiter_);
+  if (not (end or (eol_ and (end = strstr(line, eol_))))) {
+    return line + strlen(line);
+  }
+  return end;
+}
+
 
 /*! Constructor.
  *
  * \param delimiter Field delimiter.
  */
 TextParser::TextParser(char const* delimiter)
-  : delimiter_(delimiter), eol_("") {}
+  : delimiter_(delimiter), eol_(nullptr) {}
 
 /*! Constructor.
  *

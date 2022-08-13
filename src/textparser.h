@@ -10,6 +10,7 @@ class TextParser {
   char const* eol_;
 
   void consume_(char**);
+  char* findEnd_(char*);
   inline void parseLine_(char**);
   template <class H, class... Tail>
     void parseLine_(char**, H&, Tail&...);
@@ -60,19 +61,14 @@ void TextParser::parse(T& result, char** line) {
  */
 template <size_t N>
 void TextParser::parse(char (&result)[N], char** line) {
-  char* end = strstr(*line, delimiter_);
-  if (not end and *eol_) {
-    end = strstr(*line, eol_);
-  }
-  if (not end) {
-    end = *line + strlen(*line);
-  }
+  char* end = findEnd_(*line);
 
   char* result_ = result;
   for (size_t i = 0; i < N - 1 and *line < end; i++, result_++, (*line)++) {
     *result_ = **line;
   }
   *result_ = 0;
+
   *line = end;
 }
 
