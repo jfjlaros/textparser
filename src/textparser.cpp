@@ -56,21 +56,3 @@ void TextParser::parse(char& result, char** line) {
     (*line)++;
   }
 }
-
-/*! Parse a C string.
- *
- * \param result Result.
- * \param line Pointer to C string.
- */
-void TextParser::parse(char* result, char** line) {
-  char* end = strstr(*line, delimiter_);
-  if (not end and *eol_) {
-    end = strstr(*line, eol_);
-  }
-  while (**line and *line != end) {
-    *result = **line;
-    result++;
-    (*line)++;
-  }
-  *result = 0;
-}

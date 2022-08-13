@@ -62,6 +62,14 @@ TEST_CASE("C string", "[basic]") {
   REQUIRE(not strcmp(a, "three"));
 }
 
+TEST_CASE("C string too long", "[basic]") {
+  char a[4];
+  char* line = const_cast<char*>("three");
+  parser.parse(a, &line);
+
+  REQUIRE(not strcmp(a, "thr"));
+}
+
 
 TEST_CASE("Line with only integers", "[line]") {
   int a[3];
@@ -124,6 +132,15 @@ TEST_CASE("Line too short for mixed types", "[line]") {
   REQUIRE(c == 0.0);
 }
 
+
+TEST_CASE("C string too long in line", "[line]") {
+  char a[4];
+  char b[4];
+  parser.parseLine("three, one", a, b);
+
+  REQUIRE(not strcmp(a, "thr"));
+  REQUIRE(not strcmp(b, "one"));
+}
 
 TEST_CASE("No end of line", "[eol]") {
   char a[10];

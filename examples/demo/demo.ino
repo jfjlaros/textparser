@@ -39,6 +39,19 @@ void demo3() {
   Serial.println('.');
 }
 
+void demo4() {
+  // A two dimensional array can be used to extract substrings.
+  TextParser parser(" ", ".");
+  char words[5][6];
+  parser.parseLine("This is a nice line.", words);
+
+  for (char* const w: words) {
+    Serial.print(w);
+    Serial.print(' ');
+  }
+  Serial.println();
+}
+
 
 void setup() {
   Serial.begin(9600);
@@ -46,6 +59,7 @@ void setup() {
   demo1();
   demo2();
   demo3();
+  demo4();
 }
 
 void loop() {}

@@ -21,9 +21,10 @@ public:
   void parse(double&, char**);
   void parse(float&, char**);
   void parse(char&, char**);
-  void parse(char*, char**);
   template <class T>
     void parse(T&, char**);
+  template <size_t N>
+    void parse(char (&)[N], char**);
   template <class T, size_t N>
     void parse(T (&)[N], char**);
 
@@ -52,11 +53,34 @@ void TextParser::parse(T& result, char** line) {
   result = strtol(*line, line, 10);
 }
 
-/*! Parse an array.
+/*! Parse an C string.
  *
  * \param result Result.
  * \param line Pointer to C string.
  */
+template <size_t N>
+void TextParser::parse(char (&result)[N], char** line) {
+  char* end = strstr(*line, delimiter_);
+  if (not end and *eol_) {
+    end = strstr(*line, eol_);
+  }
+  if (not end) {
+    end = *line + strlen(*line);
+  }
+
+  char* result_ = result;
+  for (size_t i = 0; i < N - 1 and *line < end; i++, result_++, (*line)++) {
+    *result_ = **line;
+  }
+  *result_ = 0;
+  *line = end;
+}
+
+/*! Parse an array.
+  *
+  * \param result Result.
+  * \param line Pointer to C string.
+  */
 template <class T, size_t N>
 void TextParser::parse(T (&result)[N], char** line) {
   for (size_t i = 0; i < N; i++) {
