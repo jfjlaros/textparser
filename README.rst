@@ -1,5 +1,5 @@
-Line based text parser for Arduino.
-===================================
+Line based text parser.
+=======================
 
 .. image:: https://img.shields.io/github/last-commit/jfjlaros/textparser.svg
    :target: https://github.com/jfjlaros/textparser/graphs/commit-activity
@@ -65,5 +65,4 @@ If the fields have different types, we can use multiple variables.
     parser.parseLine("one, 2, 3.4", a, b, c);
 
 
-.. _Arduino: https://www.arduino.cc
 .. _ReadTheDocs: https://arduinotextparser.readthedocs.io

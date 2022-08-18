@@ -54,6 +54,28 @@ TEST_CASE("Char", "[basic]") {
   REQUIRE(a == 'a');
 }
 
+TEST_CASE("Bool", "[basic]") {
+  bool a;
+
+  char* line = const_cast<char*>("1");
+  parser.parse(a, &line);
+  REQUIRE(a);
+  line = const_cast<char*>("3");
+  parser.parse(a, &line);
+  REQUIRE(a);
+  line = const_cast<char*>("0");
+  parser.parse(a, &line);
+  REQUIRE(not a);
+
+  TextParser parser_(", ", "\r\n", "TRUE");
+  line = const_cast<char*>("TRUE");
+  parser_.parse(a, &line);
+  REQUIRE(a);
+  line = const_cast<char*>("FALSE");
+  parser_.parse(a, &line);
+  REQUIRE(not a);
+}
+
 TEST_CASE("C string", "[basic]") {
   char a[10];
   char* line = const_cast<char*>("three");
@@ -111,6 +133,23 @@ TEST_CASE("Line with mixed types", "[line]") {
   REQUIRE(d == 1.5);
 }
 
+TEST_CASE("Line with mixed boolean types", "[line]") {
+  char const line[] = "1, 0, TRUE, FALSE";
+  bool a[4];
+  parser.parseLine(line, a);
+
+  REQUIRE(a[0]);
+  REQUIRE(not (a[1] or a[2] or a[3]));
+
+  TextParser parser_(", ", "", "TRUE");
+  parser_.parseLine(line, a);
+
+  REQUIRE(a[2]);
+  REQUIRE(not a[0]);
+  REQUIRE(not a[1]);
+  REQUIRE(not a[3]);
+}
+
 
 TEST_CASE("Line too short for array", "[line]") {
   int a[3] = {1, 1, 1};
@@ -130,6 +169,35 @@ TEST_CASE("Line too short for mixed types", "[line]") {
   REQUIRE(not strcmp(a, "three"));
   REQUIRE(b == 1);
   REQUIRE(c == 0.0);
+}
+
+TEST_CASE("Empty line", "[line]") {
+  {
+    bool a = true;
+    parser.parseLine("", a);
+    REQUIRE(not a);
+  }
+  {
+    char a = 1;
+    parser.parseLine("", a);
+    REQUIRE(not a);
+  }
+  {
+    float a = 1;
+    parser.parseLine("", a);
+    REQUIRE(not a);
+  }
+  {
+    int a = 1;
+    parser.parseLine("", a);
+    REQUIRE(not a);
+  }
+  {
+    char a[2];
+    a[0] = 1;
+    parser.parseLine("", a);
+    REQUIRE(not strlen(a));
+  }
 }
 
 

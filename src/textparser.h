@@ -8,6 +8,7 @@
 class TextParser {
   char const* delimiter_;
   char const* eol_;
+  char const* truth_;
 
   void consume_(char**);
   char* findEnd_(char*);
@@ -18,10 +19,12 @@ class TextParser {
 public:
   TextParser(char const*);
   TextParser(char const*, char const*);
+  TextParser(char const*, char const*, char const*);
 
+  void parse(bool&, char**);
+  void parse(char&, char**);
   void parse(double&, char**);
   void parse(float&, char**);
-  void parse(char&, char**);
   template <class T>
     void parse(T&, char**);
   template <size_t N>
