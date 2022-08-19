@@ -8,13 +8,23 @@ more than one symbol.
 
     #include <textparser.h>
 
-    TextParser parser(", ");  // Delimiter is a comma followed by a space.
+    // Delimiter is a comma followed by a space.
+    TextParser parser(", ");
 
 Optionally, an end of line string can be provided when needed.
 
 .. code-block:: cpp
 
-    TextParser parser(", ", "\r\n");  // Strip end of line from strings.
+    // Strip end of line from strings.
+    TextParser parser(", ", "\r\n");
+
+Finally, a boolean truth value can be defined to enable text based boolean
+parsing.
+
+.. code-block:: cpp
+
+    // Configure boolean text parsing.
+    TextParser parser(", ", nullptr, "TRUE");
 
 
 Uniform types
@@ -35,6 +45,7 @@ change the type of the receiving array.
     float a[5];
     parser.parseLine("1, 2, 3, 4, 5", a);
 
+
 Non-uniform types
 -----------------
 
@@ -46,6 +57,30 @@ If the fields have different types, we can use multiple variables.
     int b;
     double c;
     parser.parseLine("one, 2, 3.4", a, b, c);
+
+
+Boolean types
+-------------
+
+By default, integers are used to represent boolean values.
+
+.. code-block:: cpp
+
+    bool a;
+    parser.parseLine("0", a);    // `a` contains `false`.
+    parser.parseLine("1", a);    // `a` contains `true`.
+    parser.parseLine("314", a);  // `a` contains `true`.
+
+If boolean text parsing is enabled, only an exact string match with the given
+truth vale will result in a variable being set to ``true``.
+
+.. code-block:: cpp
+
+    TextParser parser(", ", nullptr, "Yes");
+    bool a;
+    parser.parseLine("1", a);    // `a` contains `false`.
+    parser.parseLine("Yes", a);  // `a` contains `true`.
+    parser.parseLine("YES", a);  // `a` contains `false`.
 
 
 Examples

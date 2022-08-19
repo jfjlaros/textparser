@@ -6,9 +6,14 @@ API documentation
     #include <textparser.h>
 
 
-Class definition
+Type definitions
 ----------------
+
+.. doxygentypedef:: ccpc
+
+
+Class definitions
+-----------------
 
 .. doxygenclass:: TextParser
    :members:
-

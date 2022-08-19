@@ -4,7 +4,7 @@
 #include <string.h>
 
 typedef char const* ccp;
-typedef ccp const ccpc;
+typedef char const* const ccpc;  //!< Constant pointer to a constant string.
 
 /*! Line based text parser. */
 class TextParser {
@@ -27,21 +27,68 @@ class TextParser {
     void parseLine_(ccp*, H&, Tail&...) const;
 
 public:
-  TextParser(ccpc);
-  TextParser(ccpc, ccpc);
-  TextParser(ccpc, ccpc, ccpc);
+  /*! Constructor.
+   *
+   * \param[in] delimiter Field delimiter.
+   */
+  TextParser(ccpc delimiter);
 
-  void parse(bool&, ccpc, ccpc) const;
-  void parse(char&, ccpc, ccpc) const;
-  void parse(double&, ccpc, ccpc) const;
-  void parse(float&, ccpc, ccpc) const;
+  /*! \copydoc TextParser(ccpc)
+   *
+   * \param[in] eol Line delimiter.
+   */
+  TextParser(ccpc delimiter, ccpc eol);
+
+  /*! \copydoc TextParser(ccpc, ccpc)
+   *
+   * \param[in] truth Truth representation.
+   */
+  TextParser(ccpc delimiter, ccpc eol, ccpc truth);
+
+
+  /*! Parse a field.
+   *
+   * \param[out] result Result.
+   * \param[in] begin Pointer to C string.
+   * \param[in] end Pointer to end of C string.
+   */
+  void parse(bool& result, ccpc begin, ccpc end) const;
+
+  /*! \copydoc parse(bool&, ccpc, ccpc) const */
+  void parse(char& result, ccpc begin, ccpc end) const;
+
+  /*! \copydoc parse(bool&, ccpc, ccpc) const */
+  void parse(double& result, ccpc begin, ccpc end) const;
+
+  /*! \copydoc parse(bool&, ccpc, ccpc) const */
+  void parse(float& result, ccpc begin, ccpc end) const;
+
+  /*!
+   * \tparam N String length.
+   *
+   * \copydoc parse(bool&, ccpc, ccpc) const
+   */
   template <size_t N>
-    void parse(char (&)[N], ccpc, ccpc) const;
-  template <class T>
-    void parse(T&, ccpc, ccpc) const;
+    void parse(char (&result)[N], ccpc begin, ccpc end) const;
 
+  /*!
+   * \tparam T Integer type.
+   *
+   * \copydoc parse(bool&, ccpc, ccpc) const
+   */
+  template <class T>
+    void parse(T& result, ccpc begin, ccpc end) const;
+
+
+  /*! Parse a line.
+   *
+   * \tparam Args Output variable types.
+   *
+   * \param[in] line Line to be parsed.
+   * \param[out] args Variables to hold the parsed data.
+   */
   template <class... Args>
-    void parseLine(ccpc, Args&...) const;
+    void parseLine(ccpc line, Args&... args) const;
 };
 
 
@@ -76,12 +123,6 @@ void TextParser::parseLine_(ccp* line, H& h, Tail&... tail) const {
 }
 
 
-/*! Parse a C string.
- *
- * \param result Result.
- * \param begin Pointer to C string.
- * \param end Pointer to end of C string.
- */
 template <size_t N>
 void TextParser::parse(char (&result)[N], ccpc begin, ccpc end) const {
   char* p = result;
@@ -91,23 +132,12 @@ void TextParser::parse(char (&result)[N], ccpc begin, ccpc end) const {
   *p = 0;
 }
 
-/*! Parse an integer type.
- *
- * \param result Result.
- * \param begin Pointer to C string.
- * \param end Pointer to end of C string.
- */
 template <class T>
 void TextParser::parse(T& result, ccpc begin, ccpc) const {
   result = strtol(begin, nullptr, 10);
 }
 
 
-/*! Parse a line.
- *
- * \param line Line to be parsed.
- * \param args Variables to hold the parsed data.
- */
 template <class... Args>
 void TextParser::parseLine(ccpc line, Args&... args) const {
   ccp line_ = line;

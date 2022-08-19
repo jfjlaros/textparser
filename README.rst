@@ -30,6 +30,7 @@ This library provides a simple way to parse line based data.
 
 - Easy to use.
 - Works with all types of delimiters and line endings.
+- Works with arbitrary boolean value notation.
 - Tiny overhead compared to dedicated solutions.
 - Type safe.
 

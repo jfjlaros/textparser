@@ -6,6 +6,7 @@
 
 TextParser parser(", ");
 
+
 TEST_CASE("Integer", "[basic]") {
   int a;
   ccpc line = "3";
@@ -189,32 +190,29 @@ TEST_CASE("Line too short for mixed types", "[line]") {
 }
 
 TEST_CASE("Empty line", "[line]") {
-  {
-    bool a = true;
-    parser.parseLine("", a);
-    REQUIRE(not a);
-  }
-  {
-    char a = 1;
-    parser.parseLine("", a);
-    REQUIRE(not a);
-  }
-  {
-    float a = 1;
-    parser.parseLine("", a);
-    REQUIRE(not a);
-  }
-  {
-    int a = 1;
-    parser.parseLine("", a);
-    REQUIRE(not a);
-  }
-  {
-    char a[2];
-    a[0] = 1;
-    parser.parseLine("", a);
-    REQUIRE(not strlen(a));
-  }
+  bool a = true;
+  parser.parseLine("", a);
+  REQUIRE(not a);
+
+  char b = 1;
+  parser.parseLine("", b);
+  REQUIRE(not b);
+
+  float c = 1;
+  parser.parseLine("", c);
+  REQUIRE(not c);
+
+  int d = 1;
+  parser.parseLine("", d);
+  REQUIRE(not d);
+
+  char e[2] = "1";
+  parser.parseLine("", e);
+  REQUIRE(not strlen(e));
+
+  int f[2] = {1, 1};
+  parser.parseLine("", f);
+  REQUIRE(not (f[0] or f[1]));
 }
 
 
