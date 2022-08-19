@@ -3,89 +3,103 @@
 #include <stdlib.h>
 #include <string.h>
 
+typedef char const* ccp;
+typedef ccp const ccpc;
 
 /*! Line based text parser. */
 class TextParser {
-  char const* delimiter_;
-  char const* eol_;
-  char const* truth_;
+  ccpc delimiter_;
+  ccpc eol_;
+  ccpc truth_;
 
-  void consume_(char**);
-  char* findEnd_(char*);
-  inline void parseLine_(char**);
+  void consume_(ccp*) const;
+  ccp findEnd_(ccp) const;
+
+  template <class T>
+    void parseField_(ccp*, T&) const;
+
+  inline void parseLine_(ccp*) const;
+  template <size_t N, class... Tail>
+    void parseLine_(ccp*, char (&)[N], Tail&...) const;
+  template <class T, size_t N, class... Tail>
+    void parseLine_(ccp*, T (&)[N], Tail&...) const;
   template <class H, class... Tail>
-    void parseLine_(char**, H&, Tail&...);
+    void parseLine_(ccp*, H&, Tail&...) const;
 
 public:
-  TextParser(char const*);
-  TextParser(char const*, char const*);
-  TextParser(char const*, char const*, char const*);
+  TextParser(ccpc);
+  TextParser(ccpc, ccpc);
+  TextParser(ccpc, ccpc, ccpc);
 
-  void parse(bool&, char**);
-  void parse(char&, char**);
-  void parse(double&, char**);
-  void parse(float&, char**);
-  template <class T>
-    void parse(T&, char**);
+  void parse(bool&, ccpc, ccpc) const;
+  void parse(char&, ccpc, ccpc) const;
+  void parse(double&, ccpc, ccpc) const;
+  void parse(float&, ccpc, ccpc) const;
   template <size_t N>
-    void parse(char (&)[N], char**);
-  template <class T, size_t N>
-    void parse(T (&)[N], char**);
+    void parse(char (&)[N], ccpc, ccpc) const;
+  template <class T>
+    void parse(T&, ccpc, ccpc) const;
 
   template <class... Args>
-    void parseLine(char const*, Args&...);
+    void parseLine(ccpc, Args&...) const;
 };
 
 
-inline void TextParser::parseLine_(char**) {}
+inline void TextParser::parseLine_(ccp*) const {}
+
+template <class T>
+void TextParser::parseField_(ccp* line, T& data) const {
+  ccpc end = findEnd_(*line);
+  parse(data, *line, end);
+  *line = end;
+  consume_(line);
+}
+
+template <size_t N, class... Tail>
+void TextParser::parseLine_(ccp* line, char (&h)[N], Tail&... tail) const {
+  parseField_(line, h);
+  parseLine_(line, tail...);
+}
+
+template <class T, size_t N, class... Tail>
+void TextParser::parseLine_(ccp* line, T (&h)[N], Tail&... tail) const {
+  for (size_t i = 0; i < N; i++) {
+    parseField_(line, h[i]);
+  }
+  parseLine_(line, tail...);
+}
 
 template <class H, class... Tail>
-void TextParser::parseLine_(char** line, H& head, Tail&... tail) {
-  parse(head, line);
-  consume_(line);
+void TextParser::parseLine_(ccp* line, H& h, Tail&... tail) const {
+  parseField_(line, h);
   parseLine_(line, tail...);
 }
 
 
+/*! Parse a C string.
+ *
+ * \param result Result.
+ * \param begin Pointer to C string.
+ * \param end Pointer to end of C string.
+ */
+template <size_t N>
+void TextParser::parse(char (&result)[N], ccpc begin, ccpc end) const {
+  char* p = result;
+  for (ccp q = begin; p < result + N - 1 and q < end; p++, q++) {
+    *p = *q;
+  }
+  *p = 0;
+}
+
 /*! Parse an integer type.
  *
  * \param result Result.
- * \param line Pointer to C string.
+ * \param begin Pointer to C string.
+ * \param end Pointer to end of C string.
  */
 template <class T>
-void TextParser::parse(T& result, char** line) {
-  result = strtol(*line, line, 10);
-}
-
-/*! Parse an C string.
- *
- * \param result Result.
- * \param line Pointer to C string.
- */
-template <size_t N>
-void TextParser::parse(char (&result)[N], char** line) {
-  char* end = findEnd_(*line);
-
-  char* result_ = result;
-  for (size_t i = 0; i < N - 1 and *line < end; i++, result_++, (*line)++) {
-    *result_ = **line;
-  }
-  *result_ = 0;
-
-  *line = end;
-}
-
-/*! Parse an array.
-  *
-  * \param result Result.
-  * \param line Pointer to C string.
-  */
-template <class T, size_t N>
-void TextParser::parse(T (&result)[N], char** line) {
-  for (size_t i = 0; i < N; i++) {
-    parse(result[i], line);
-    consume_(line);
-  }
+void TextParser::parse(T& result, ccpc begin, ccpc) const {
+  result = strtol(begin, nullptr, 10);
 }
 
 
@@ -95,7 +109,7 @@ void TextParser::parse(T (&result)[N], char** line) {
  * \param args Variables to hold the parsed data.
  */
 template <class... Args>
-void TextParser::parseLine(char const* line, Args&... args) {
-  char* line_ = const_cast<char*>(line);
+void TextParser::parseLine(ccpc line, Args&... args) const {
+  ccp line_ = line;
   parseLine_(&line_, args...);
 }

@@ -1,17 +1,12 @@
 #include "textparser.h"
 
 
-void TextParser::consume_(char** line) {
-  for (char const *c = delimiter_; *c; c++) {
-    if (not **line or **line != *c) {
-      return;
-    }
-    (*line)++;
-  }
+void TextParser::consume_(ccp* line) const {
+  for (ccp p = delimiter_; *p and **line and **line == *p; p++, (*line)++);
 }
 
-char* TextParser::findEnd_(char* line) {
-  char* end = strstr(line, delimiter_);
+ccp TextParser::findEnd_(ccp line) const {
+  ccp end = strstr(line, delimiter_);
   if (not (end or (eol_ and (end = strstr(line, eol_))))) {
     return line + strlen(line);
   }
@@ -23,7 +18,7 @@ char* TextParser::findEnd_(char* line) {
  *
  * \param delimiter Field delimiter.
  */
-TextParser::TextParser(char const* delimiter)
+TextParser::TextParser(ccpc delimiter)
   : delimiter_(delimiter), eol_(nullptr), truth_(nullptr) {}
 
 /*! Constructor.
@@ -31,7 +26,7 @@ TextParser::TextParser(char const* delimiter)
  * \param delimiter Field delimiter.
  * \param eol Line delimiter.
  */
-TextParser::TextParser(char const* delimiter, char const* eol)
+TextParser::TextParser(ccpc delimiter, ccpc eol)
   : delimiter_(delimiter), eol_(eol), truth_(nullptr) {}
 
 /*! Constructor.
@@ -40,58 +35,55 @@ TextParser::TextParser(char const* delimiter, char const* eol)
  * \param eol Line delimiter.
  * \param truth Truth representation.
  */
-TextParser::TextParser(
-    char const* delimiter, char const* eol, char const* truth)
+TextParser::TextParser(ccpc delimiter, ccpc eol, ccpc truth)
   : delimiter_(delimiter), eol_(eol), truth_(truth) {}
 
 
 /*! Parse a bool.
  *
  * \param result Result.
- * \param line Pointer to C string.
+ * \param begin Pointer to C string.
+ * \param end Pointer to end of C string.
  */
-void TextParser::parse(bool& result, char** line) {
+void TextParser::parse(bool& result, ccpc begin, ccpc end) const {
   if (truth_) {
-    char* begin = *line;
-    *line = findEnd_(*line);
-
-    size_t textLen = static_cast<size_t>(*line - begin);
-    result = false;
-    if (strlen(truth_) == textLen) {
-      result = not strncmp(begin, truth_, textLen);
-    }
+    ccp p = begin;
+    for (ccp q = truth_; p < end and *q and *p == *q; p++, q++);
+    result = p == end;
     return;
   }
-
-  result = strtol(*line, line, 10);
+  result = strtol(begin, nullptr, 10);
 }
 
 /*! Parse a char.
  *
  * \param result Result.
- * \param line Pointer to C string.
+ * \param begin Pointer to C string.
+ * \param end Pointer to end of C string.
  */
-void TextParser::parse(char& result, char** line) {
-  result = **line;
-  if (**line) {
-    (*line)++;
+void TextParser::parse(char& result, ccpc begin, ccpc end) const {
+  result = 0;
+  if (begin < end) {
+    result = *begin;
   }
 }
 
 /*! Parse a double.
  *
  * \param result Result.
- * \param line Pointer to C string.
+ * \param begin Pointer to C string.
+ * \param end Pointer to end of C string.
  */
-void TextParser::parse(double& result, char** line) {
-  result = strtod(*line, line);
+void TextParser::parse(double& result, ccpc begin, ccpc) const {
+  result = strtod(begin, nullptr);
 }
 
 /*! Parse a float.
  *
  * \param result Result.
- * \param line Pointer to C string.
+ * \param begin Pointer to C string.
+ * \param end Pointer to end of C string.
  */
-void TextParser::parse(float& result, char** line) {
-  result = strtod(*line, line);
+void TextParser::parse(float& result, ccpc begin, ccpc) const {
+  result = strtod(begin, nullptr);
 }

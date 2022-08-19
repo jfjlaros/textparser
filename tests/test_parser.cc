@@ -8,86 +8,103 @@ TextParser parser(", ");
 
 TEST_CASE("Integer", "[basic]") {
   int a;
-  char* line = const_cast<char*>("3");
-  parser.parse(a, &line);
+  ccpc line = "3";
+  parser.parse(a, line, line + 1);
 
   REQUIRE(a == 3);
 }
 
 TEST_CASE("Short unsigned integer", "[basic]") {
   short unsigned int a;
-  char* line = const_cast<char*>("3");
-  parser.parse(a, &line);
+  ccpc line = "3";
+  parser.parse(a, line, line + 1);
 
   REQUIRE(a == 3);
 }
 
 TEST_CASE("Long long integer", "[basic]") {
   long long int a;
-  char* line = const_cast<char*>("3");
-  parser.parse(a, &line);
+  ccpc line = "3";
+  parser.parse(a, line, line + 1);
 
   REQUIRE(a == 3);
 }
 
 TEST_CASE("Double", "[basic]") {
   double a;
-  char* line = const_cast<char*>("3.1");
-  parser.parse(a, &line);
+  ccpc line = "3.1";
+  parser.parse(a, line, line + 3);
 
   REQUIRE(a == 3.1);
 }
 
 TEST_CASE("Float", "[basic]") {
   float a;
-  char* line = const_cast<char*>("3.1");
-  parser.parse(a, &line);
+  ccpc line = "3.1";
+  parser.parse(a, line, line + 3);
 
   REQUIRE(a == 3.1f);
 }
 
 TEST_CASE("Char", "[basic]") {
   char a;
-  char* line = const_cast<char*>("a");
-  parser.parse(a, &line);
+  ccpc line = "a";
+  parser.parse(a, line, line + 1);
 
   REQUIRE(a == 'a');
 }
 
-TEST_CASE("Bool", "[basic]") {
+TEST_CASE("Bool as integer", "[basic]") {
   bool a;
 
-  char* line = const_cast<char*>("1");
-  parser.parse(a, &line);
+  ccp line = "1";
+  parser.parse(a, line, line + 1);
   REQUIRE(a);
-  line = const_cast<char*>("3");
-  parser.parse(a, &line);
+  line = "3";
+  parser.parse(a, line, line + 1);
   REQUIRE(a);
-  line = const_cast<char*>("0");
-  parser.parse(a, &line);
+  line = "314";
+  parser.parse(a, line, line + 3);
+  REQUIRE(a);
+
+  line = "0";
+  parser.parse(a, line, line + 1);
+  REQUIRE(not a);
+}
+
+TEST_CASE("Bool as text", "[basic]") {
+  TextParser parser_(", ", "\r\n", "TRUE");
+  bool a;
+
+  ccp line = "TRUE";
+  parser_.parse(a, line, line + 4);
+  REQUIRE(a);
+
+  line = "FALSE";
+  parser_.parse(a, line, line + 5);
   REQUIRE(not a);
 
-  TextParser parser_(", ", "\r\n", "TRUE");
-  line = const_cast<char*>("TRUE");
-  parser_.parse(a, &line);
-  REQUIRE(a);
-  line = const_cast<char*>("FALSE");
-  parser_.parse(a, &line);
+  line = "TRU";
+  parser_.parse(a, line, line + 5);
+  REQUIRE(not a);
+
+  line = "TRUEE";
+  parser_.parse(a, line, line + 5);
   REQUIRE(not a);
 }
 
 TEST_CASE("C string", "[basic]") {
   char a[10];
-  char* line = const_cast<char*>("three");
-  parser.parse(a, &line);
+  ccpc line = "three";
+  parser.parse(a, line, line + 5);
 
   REQUIRE(not strcmp(a, "three"));
 }
 
 TEST_CASE("C string too long", "[basic]") {
   char a[4];
-  char* line = const_cast<char*>("three");
-  parser.parse(a, &line);
+  ccpc line = "three";
+  parser.parse(a, line, line + 5);
 
   REQUIRE(not strcmp(a, "thr"));
 }
@@ -134,14 +151,14 @@ TEST_CASE("Line with mixed types", "[line]") {
 }
 
 TEST_CASE("Line with mixed boolean types", "[line]") {
-  char const line[] = "1, 0, TRUE, FALSE";
+  ccpc line = "1, 0, TRUE, FALSE";
   bool a[4];
   parser.parseLine(line, a);
 
   REQUIRE(a[0]);
   REQUIRE(not (a[1] or a[2] or a[3]));
 
-  TextParser parser_(", ", "", "TRUE");
+  TextParser parser_(", ", nullptr, "TRUE");
   parser_.parseLine(line, a);
 
   REQUIRE(a[2]);
@@ -241,7 +258,7 @@ TEST_CASE("Delimiter too short", "[delim]") {
   parser.parseLine("3,1", a);
 
   REQUIRE(a[0] == 3);
-  REQUIRE(a[1] == 1);
+  REQUIRE(a[1] == 0);
 }
 
 TEST_CASE("Delimiter too short for string", "[delim]") {
