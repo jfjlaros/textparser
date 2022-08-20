@@ -29,9 +29,10 @@ This library provides a simple way to parse line based data.
 **Features:**
 
 - Easy to use.
-- Works with all types of delimiters and line endings.
-- Works with arbitrary boolean value notation.
-- Works with integers in any base.
+- Support for all types of delimiters and line endings.
+- Support for arbitrary boolean value notation.
+- Support for categorical data.
+- Support for integers in any base.
 - Tiny overhead compared to dedicated solutions.
 - Type safe.
 
@@ -64,8 +65,7 @@ If the fields have different types, we can use multiple variables.
     char a[4];
     int b;
     double c;
-    Number<int, 16> d;  // Hexadecimal number.
-    parser.parseLine("one, 2, 3.4, 0x38", a, b, c, d);
+    parser.parseLine("one, 2, 3.4, 0x38", a, b, c);
 
 
 .. _ReadTheDocs: https://arduinotextparser.readthedocs.io

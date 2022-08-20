@@ -25,6 +25,26 @@ struct Bool {
   bool value;  //!< Value.
 };
 
+/*! Category.
+ *
+ * \tparam T Integer type.
+ * \tparam .
+ */
+template <class T, ccp* labels>
+struct Category {
+  T value;  //!< Value.
+};
+
+
+/*! String comparison.
+ *
+ * \param[in] begin Pointer to the first C string.
+ * \param[in] end Pointer to end of the first C string.
+ * \param[in] str Pointer to the second C string.
+ */
+bool strmatch(ccpc begin, ccpc end, ccpc str);
+
+
 /*! Line based text parser. */
 class TextParser {
   ccpc delimiter_;
@@ -99,6 +119,15 @@ public:
 
   /*!
    * \tparam T Integer type.
+   * \tparam labels Labels.
+   *
+   * \copydoc parse(char&, ccpc, ccpc) const
+   */
+  template <class T, ccp* labels>
+    void parse(Category<T, labels>& result, ccpc begin, ccpc end) const;
+
+  /*!
+   * \tparam T Integer type.
    *
    * \copydoc parse(char&, ccpc, ccpc) const
    */
@@ -160,10 +189,19 @@ void TextParser::parse(char (&result)[n], ccpc begin, ccpc end) const {
 
 template <ccp truth>
 void TextParser::parse(Bool<truth>& result, ccpc begin, ccpc end) const {
-  ccp p;
-  ccp q;
-  for (p = begin, q = truth; p < end and *q and *p == *q; p++, q++);
-  result.value = p == end and not *q;
+  result.value = strmatch(begin, end, truth);
+}
+
+template <class T, ccp* labels>
+void TextParser::parse(
+    Category<T, labels>& result, ccpc begin, ccpc end) const {
+  result.value = -1;
+  for (size_t i = 0; labels[i]; i++) {
+    if (strmatch(begin, end, labels[i])) {
+      result.value = i;
+      return;
+    }
+  }
 }
 
 template <class T, size_t base>

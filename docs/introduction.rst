@@ -98,5 +98,3 @@ If this library does not meet your requirements, then perhaps the
 
 .. _`delimiter separated values`: https://en.wikipedia.org/wiki/Delimiter-separated_values
 .. _`CSV parser for Arduino`: https://github.com/michalmonday/CSV-Parser-for-Arduino
-
-

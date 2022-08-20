@@ -33,7 +33,7 @@ void lib() {
 
 void setup() {
   //noLib();  // 2538 bytes program storage space, 204 bytes dynamic memory.
-  //lib();    // 2604 bytes program storage space, 206 bytes dynamic memory.
+  //lib();    // 2620 bytes program storage space, 206 bytes dynamic memory.
 }
 
 void loop() {}

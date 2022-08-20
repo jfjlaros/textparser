@@ -80,6 +80,26 @@ This string can then be used to create a variable of type ``Bool``.
     parser.parseLine("YES", a);  // `a.value` contains `false`.
 
 
+Categorical data
+----------------
+
+For categorical data, we need to define a global zero terminated list of
+labels.
+
+.. code-block:: cpp
+
+    char const* labels[] = {"red", "green", "blue", nullptr};
+
+These labels can then be used to create a variable of type ``Category``.
+
+.. code-block:: cpp
+
+    Category<int, labels> a;
+    parser.parseLine("red", a);     // `a.value` contains 0.
+    parser.parseLine("blue", a);    // `a.value` contains 2.
+    parser.parseLine("yellow", a);  // `a.value` contains -1.
+
+
 Integers in other bases
 -----------------------
 
@@ -95,9 +115,7 @@ Integers in arbitrary bases are supported via the `Number` type.
 Examples
 --------
 
-Please see the demo_ sketch for an example of basic usage and the multilevel_
-sketch for a more complicated example.
+Please see the demo_ sketch for an example of basic usage.
 
 
 .. _demo: https://github.com/jfjlaros/textparser/blob/master/examples/demo/demo.ino
-.. _multilevel: https://github.com/jfjlaros/textparser/blob/master/examples/multilevel/multilevel.ino

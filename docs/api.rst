@@ -13,14 +13,27 @@ Type definitions
 .. doxygentypedef:: ccpc
 
 
-Class definitions
------------------
+Functions
+---------
+
+.. doxygenfunction:: strmatch
+
+
+Types
+-----
 
 .. doxygenstruct:: Number
    :members:
 
 .. doxygenstruct:: Bool
    :members:
+
+.. doxygenstruct:: Category
+   :members:
+
+
+Class definitions
+-----------------
 
 .. doxygenclass:: TextParser
    :members:
