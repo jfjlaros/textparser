@@ -14,26 +14,6 @@ ccp TextParser::findEnd_(ccp line) const {
 }
 
 
-TextParser::TextParser(ccpc delimiter)
-  : delimiter_(delimiter), eol_(nullptr), truth_(nullptr) {}
-
-TextParser::TextParser(ccpc delimiter, ccpc eol)
-  : delimiter_(delimiter), eol_(eol), truth_(nullptr) {}
-
-TextParser::TextParser(ccpc delimiter, ccpc eol, ccpc truth)
-  : delimiter_(delimiter), eol_(eol), truth_(truth) {}
-
-
-void TextParser::parse(bool& result, ccpc begin, ccpc end) const {
-  if (truth_) {
-    ccp p = begin;
-    for (ccp q = truth_; p < end and *q and *p == *q; p++, q++);
-    result = p == end;
-    return;
-  }
-  result = strtol(begin, nullptr, 10);
-}
-
 void TextParser::parse(char& result, ccpc begin, ccpc end) const {
   result = 0;
   if (begin < end) {

@@ -18,14 +18,6 @@ Optionally, an end of line string can be provided when needed.
     // Strip end of line from strings.
     TextParser parser(", ", "\r\n");
 
-Finally, a boolean truth value can be defined to enable text based boolean
-parsing.
-
-.. code-block:: cpp
-
-    // Configure boolean text parsing.
-    TextParser parser(", ", nullptr, "TRUE");
-
 
 Uniform types
 -------------
@@ -71,16 +63,21 @@ By default, integers are used to represent boolean values.
     parser.parseLine("1", a);    // `a` contains `true`.
     parser.parseLine("314", a);  // `a` contains `true`.
 
-If boolean text parsing is enabled, only an exact string match with the given
-truth vale will result in a variable being set to ``true``.
+For text to boolean conversion, we first need to define a global string that
+contains the truth value.
 
 .. code-block:: cpp
 
-    TextParser parser(", ", nullptr, "Yes");
-    bool a;
-    parser.parseLine("1", a);    // `a` contains `false`.
-    parser.parseLine("Yes", a);  // `a` contains `true`.
-    parser.parseLine("YES", a);  // `a` contains `false`.
+    char const truth[] = "Yes";  // This needs to be a global string.
+
+This string can then be used to create a variable of type ``Bool``.
+
+.. code-block:: cpp
+
+    Bool<truth> a;
+    parser.parseLine("1", a);    // `a.value` contains `false`.
+    parser.parseLine("Yes", a);  // `a.value` contains `true`.
+    parser.parseLine("YES", a);  // `a.value` contains `false`.
 
 
 Integers in other bases
@@ -90,8 +87,9 @@ Integers in arbitrary bases are supported via the `Number` type.
 
 .. code-block:: cpp
 
-    Number<int> a = {0, 16};  // Hexadecimal number initialised to 0.
-    parser.parseLine("0x1f", a);
+    Number<int, 16> a;  // Hexadecimal number.
+    Number<int, 2> a;   // Binary number.
+    parser.parseLine("0x1f, 101001", a, b);
 
 
 Examples

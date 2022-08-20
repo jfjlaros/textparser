@@ -9,6 +9,7 @@ API documentation
 Type definitions
 ----------------
 
+.. doxygentypedef:: ccp
 .. doxygentypedef:: ccpc
 
 
@@ -16,6 +17,9 @@ Class definitions
 -----------------
 
 .. doxygenstruct:: Number
+   :members:
+
+.. doxygenstruct:: Bool
    :members:
 
 .. doxygenclass:: TextParser

@@ -64,7 +64,7 @@ If the fields have different types, we can use multiple variables.
     char a[4];
     int b;
     double c;
-    Number<int> d = {0, 16};  // Hexadecimal number.
+    Number<int, 16> d;  // Hexadecimal number.
     parser.parseLine("one, 2, 3.4, 0x38", a, b, c, d);
 
 

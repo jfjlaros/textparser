@@ -4,6 +4,7 @@
 
 #include "../src/textparser.h"
 
+char const truth[] = "TRUE";
 TextParser parser(", ");
 
 
@@ -48,17 +49,17 @@ TEST_CASE("Float", "[basic]") {
 }
 
 TEST_CASE("Hexadecimal number", "[basic]") {
-  Number<int> a = {0, 16};
+  Number<int, 16> a;
   ccpc line = "0x1f";
-  parser.parse(a, line, line + 3);
+  parser.parse(a, line, line + 4);
 
   REQUIRE(a.value == 31);
 }
 
 TEST_CASE("Binary number", "[basic]") {
-  Number<uint8_t> a = {0, 2};
+  Number<uint8_t, 2> a;
   ccpc line = "11111";
-  parser.parse(a, line, line + 3);
+  parser.parse(a, line, line + 5);
 
   REQUIRE(a.value == 31);
 }
@@ -90,24 +91,21 @@ TEST_CASE("Bool as integer", "[basic]") {
 }
 
 TEST_CASE("Bool as text", "[basic]") {
-  TextParser parser_(", ", "\r\n", "TRUE");
-  bool a;
+  Bool<truth> a;
 
   ccp line = "TRUE";
-  parser_.parse(a, line, line + 4);
-  REQUIRE(a);
-
+  parser.parse(a, line, line + 4);
+  REQUIRE(a.value);
   line = "FALSE";
-  parser_.parse(a, line, line + 5);
-  REQUIRE(not a);
-
+  parser.parse(a, line, line + 5);
+  REQUIRE(not a.value);
   line = "TRU";
-  parser_.parse(a, line, line + 5);
-  REQUIRE(not a);
+  parser.parse(a, line, line + 3);
+  REQUIRE(not a.value);
 
   line = "TRUEE";
-  parser_.parse(a, line, line + 5);
-  REQUIRE(not a);
+  parser.parse(a, line, line + 5);
+  REQUIRE(not a.value);
 }
 
 TEST_CASE("C string", "[basic]") {
@@ -159,7 +157,7 @@ TEST_CASE("Line with mixed types", "[line]") {
   int b;
   char c;
   double d;
-  Number<long> e = {0, 16};
+  Number<long, 16> e;
   parser.parseLine("three, 1, f, 1.5, 0x5c", a, b, c, d, e);
 
   REQUIRE(not strcmp(a, "three"));
@@ -171,19 +169,14 @@ TEST_CASE("Line with mixed types", "[line]") {
 
 TEST_CASE("Line with mixed boolean types", "[line]") {
   ccpc line = "1, 0, TRUE, FALSE";
-  bool a[4];
-  parser.parseLine(line, a);
+  bool a[2];
+  Bool<truth> b[2];
+  parser.parseLine(line, a, b);
 
   REQUIRE(a[0]);
-  REQUIRE(not (a[1] or a[2] or a[3]));
-
-  TextParser parser_(", ", nullptr, "TRUE");
-  parser_.parseLine(line, a);
-
-  REQUIRE(a[2]);
-  REQUIRE(not a[0]);
   REQUIRE(not a[1]);
-  REQUIRE(not a[3]);
+  REQUIRE(b[0].value);
+  REQUIRE(not b[1].value);
 }
 
 

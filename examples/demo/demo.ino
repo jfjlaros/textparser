@@ -20,7 +20,7 @@ void demo2() {
   char a[10];
   int b;
   double c;
-  Number<int> d = {0, 16};  // Hexadecimal number.
+  Number<int, 16> d;  // Hexadecimal number.
   parser.parseLine("one, 2, 3.4", a, b, c, d);
 
   Serial.print(a);
@@ -29,7 +29,7 @@ void demo2() {
   Serial.print(' ');
   Serial.println(c);
   Serial.print(' ');
-  Serial.println(d);
+  Serial.println(d.value);
 }
 
 void demo3() {
