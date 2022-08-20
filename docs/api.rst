@@ -15,5 +15,8 @@ Type definitions
 Class definitions
 -----------------
 
+.. doxygenstruct:: Number
+   :members:
+
 .. doxygenclass:: TextParser
    :members:

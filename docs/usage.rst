@@ -83,6 +83,17 @@ truth vale will result in a variable being set to ``true``.
     parser.parseLine("YES", a);  // `a` contains `false`.
 
 
+Integers in other bases
+-----------------------
+
+Integers in arbitrary bases are supported via the `Number` type.
+
+.. code-block:: cpp
+
+    Number<int> a = {0, 16};  // Hexadecimal number initialised to 0.
+    parser.parseLine("0x1f", a);
+
+
 Examples
 --------
 

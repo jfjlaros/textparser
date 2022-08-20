@@ -47,6 +47,22 @@ TEST_CASE("Float", "[basic]") {
   REQUIRE(a == 3.1f);
 }
 
+TEST_CASE("Hexadecimal number", "[basic]") {
+  Number<int> a = {0, 16};
+  ccpc line = "0x1f";
+  parser.parse(a, line, line + 3);
+
+  REQUIRE(a.value == 31);
+}
+
+TEST_CASE("Binary number", "[basic]") {
+  Number<uint8_t> a = {0, 2};
+  ccpc line = "11111";
+  parser.parse(a, line, line + 3);
+
+  REQUIRE(a.value == 31);
+}
+
 TEST_CASE("Char", "[basic]") {
   char a;
   ccpc line = "a";
@@ -143,12 +159,14 @@ TEST_CASE("Line with mixed types", "[line]") {
   int b;
   char c;
   double d;
-  parser.parseLine("three, 1, f, 1.5", a, b, c, d);
+  Number<long> e = {0, 16};
+  parser.parseLine("three, 1, f, 1.5, 0x5c", a, b, c, d, e);
 
   REQUIRE(not strcmp(a, "three"));
   REQUIRE(b == 1);
   REQUIRE(c == 'f');
   REQUIRE(d == 1.5);
+  REQUIRE(e.value == 92);
 }
 
 TEST_CASE("Line with mixed boolean types", "[line]") {

@@ -20,13 +20,16 @@ void demo2() {
   char a[10];
   int b;
   double c;
-  parser.parseLine("one, 2, 3.4", a, b, c);
+  Number<int> d = {0, 16};  // Hexadecimal number.
+  parser.parseLine("one, 2, 3.4", a, b, c, d);
 
   Serial.print(a);
   Serial.print(' ');
   Serial.print(b);
   Serial.print(' ');
   Serial.println(c);
+  Serial.print(' ');
+  Serial.println(d);
 }
 
 void demo3() {

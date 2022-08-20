@@ -6,6 +6,13 @@
 typedef char const* ccp;
 typedef char const* const ccpc;  //!< Constant pointer to a constant string.
 
+/*! Number. */
+template <class T>
+struct Number {
+  T value;            //!< Value.
+  size_t const base;  //!< Base.
+};
+
 /*! Line based text parser. */
 class TextParser {
   ccpc delimiter_;
@@ -80,6 +87,10 @@ public:
     void parse(T& result, ccpc begin, ccpc end) const;
 
 
+  /*! \copydoc parse(T&, ccpc, ccpc) const */
+  template <class T>
+    void parse(Number<T>& result, ccpc begin, ccpc end) const;
+
   /*! Parse a line.
    *
    * \tparam Args Output variable types.
@@ -135,6 +146,11 @@ void TextParser::parse(char (&result)[N], ccpc begin, ccpc end) const {
 template <class T>
 void TextParser::parse(T& result, ccpc begin, ccpc) const {
   result = strtol(begin, nullptr, 10);
+}
+
+template <class T>
+void TextParser::parse(Number<T>& result, ccpc begin, ccpc) const {
+  result.value = strtol(begin, nullptr, result.base);
 }
 
 
