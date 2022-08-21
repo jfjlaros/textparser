@@ -2,7 +2,7 @@ EXEC := run_tests
 MAIN := test_lib
 TESTS := test_parser
 FIXTURES :=
-LIBS := ../src/textparser
+LIBS := ../src/textparser ../src/texttypes
 
 
 CC := g++
