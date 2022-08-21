@@ -108,7 +108,7 @@ Integers in arbitrary bases are supported via the `Number` type.
 .. code-block:: cpp
 
     Number<int, 16> a;  // Hexadecimal number.
-    Number<int, 2> a;   // Binary number.
+    Number<int, 2> b;   // Binary number.
     parser.parseLine("0x1f, 101001", a, b);
 
 

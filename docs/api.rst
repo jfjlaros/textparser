@@ -22,6 +22,9 @@ Functions
 Types
 -----
 
+.. doxygenstruct:: Container_
+   :members:
+
 .. doxygenstruct:: Number
    :members:
 

@@ -65,7 +65,7 @@ If the fields have different types, we can use multiple variables.
     char a[4];
     int b;
     double c;
-    parser.parseLine("one, 2, 3.4, 0x38", a, b, c);
+    parser.parseLine("one, 2, 3.4", a, b, c);
 
 
 .. _ReadTheDocs: https://arduinotextparser.readthedocs.io

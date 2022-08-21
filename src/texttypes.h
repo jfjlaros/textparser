@@ -5,34 +5,37 @@
 typedef char const* ccp;  //!< Pointer to a constant string.
 typedef ccp const ccpc;   //!< Constant pointer to a constant string.
 
+/*! Generic container.
+ *
+ * \tparam T Value type.
+ */
+template <class T>
+struct Container_ {
+  T value;  //!< Value.
+};
+
 /*! Integer number.
  *
  * \tparam T Integer type.
  * \tparam base Integer base.
  */
 template <class T, size_t base>
-struct Number {
-  T value;  //!< Value.
-};
+struct Number : Container_<T> {};
 
 /*! Boolean.
  *
  * \tparam truth Truth value.
  */
 template <ccp truth>
-struct Bool {
-  bool value;  //!< Value.
-};
+struct Bool : Container_<bool> {};
 
 /*! Category.
  *
  * \tparam T Integer type.
- * \tparam .
+ * \tparam labels Labels.
  */
 template <class T, ccp* labels>
-struct Category {
-  T value;  //!< Value.
-};
+struct Category : Container_<T> {};
 
 
 /*! String comparison.
