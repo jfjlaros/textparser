@@ -6,23 +6,6 @@
 
 /*! Line based text parser. */
 class TextParser {
-  ccpc delimiter_;
-  ccpc eol_;
-
-  void consume_(ccp*) const;
-  ccp findEnd_(ccp) const;
-
-  template <class T>
-    void parseField_(ccp*, T&) const;
-
-  inline void parseLine_(ccp*) const;
-  template <size_t n, class... Tail>
-    void parseLine_(ccp*, char (&)[n], Tail&...) const;
-  template <class T, size_t n, class... Tail>
-    void parseLine_(ccp*, T (&)[n], Tail&...) const;
-  template <class H, class... Tail>
-    void parseLine_(ccp*, H&, Tail&...) const;
-
 public:
   /*! Constructor.
    *
@@ -103,6 +86,24 @@ public:
    */
   template <class... Args>
     void parseLine(ccpc line, Args&... args) const;
+
+private:
+  void consume_(ccp*) const;
+  ccp findEnd_(ccp) const;
+
+  template <class T>
+    void parseField_(ccp*, T&) const;
+
+  inline void parseLine_(ccp*) const;
+  template <size_t n, class... Tail>
+    void parseLine_(ccp*, char (&)[n], Tail&...) const;
+  template <class T, size_t n, class... Tail>
+    void parseLine_(ccp*, T (&)[n], Tail&...) const;
+  template <class H, class... Tail>
+    void parseLine_(ccp*, H&, Tail&...) const;
+
+  ccpc delimiter_{};
+  ccpc eol_{};
 };
 
 

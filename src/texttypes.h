@@ -2,8 +2,8 @@
 
 #include <stdlib.h>
 
-typedef char const* ccp;  //!< Pointer to a constant string.
-typedef ccp const ccpc;   //!< Constant pointer to a constant string.
+using ccp = char const*;  //!< Pointer to a constant string.
+using ccpc = ccp const;   //!< Constant pointer to a constant string.
 
 /*! Generic container.
  *
