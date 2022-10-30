@@ -2,11 +2,11 @@
 
 
 void TextParser::consume_(ccp* line) const {
-  for (ccp p = delimiter_; *p and **line and *p == **line; p++, (*line)++);
+  for (ccp p {delimiter_}; *p and **line and *p == **line; p++, (*line)++);
 }
 
 ccp TextParser::findEnd_(ccp line) const {
-  ccp end = strstr(line, delimiter_);
+  ccp end {strstr(line, delimiter_)};
   if (not (end or (eol_ and (end = strstr(line, eol_))))) {
     return line + strlen(line);
   }

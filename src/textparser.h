@@ -11,13 +11,15 @@ public:
    *
    * \param[in] delimiter Field delimiter.
    */
-  TextParser(ccpc delimiter) : delimiter_(delimiter), eol_(nullptr) {}
+  TextParser(ccpc delimiter)
+    : delimiter_ {delimiter}, eol_ {nullptr} {}
 
   /*! \copydoc TextParser(ccpc)
    *
    * \param[in] eol Line delimiter.
    */
-  TextParser(ccpc delimiter, ccpc eol) : delimiter_(delimiter), eol_(eol) {}
+  TextParser(ccpc delimiter, ccpc eol)
+    : delimiter_ {delimiter}, eol_ {eol} {}
 
 
   /*! Parse a field.
@@ -102,8 +104,8 @@ private:
   template <class H, class... Tail>
     void parseLine_(ccp*, H&, Tail&...) const;
 
-  ccpc delimiter_{};
-  ccpc eol_{};
+  ccpc delimiter_ {};
+  ccpc eol_ {};
 };
 
 
@@ -111,7 +113,7 @@ inline void TextParser::parseLine_(ccp*) const {}
 
 template <class T>
 void TextParser::parseField_(ccp* line, T& data) const {
-  ccpc end = findEnd_(*line);
+  ccpc end {findEnd_(*line)};
   parse(data, *line, end);
   *line = end;
   consume_(line);
@@ -125,7 +127,7 @@ void TextParser::parseLine_(ccp* line, char (&h)[n], Tail&... tail) const {
 
 template <class T, size_t n, class... Tail>
 void TextParser::parseLine_(ccp* line, T (&h)[n], Tail&... tail) const {
-  for (size_t i = 0; i < n; i++) {
+  for (size_t i {0}; i < n; i++) {
     parseField_(line, h[i]);
   }
   parseLine_(line, tail...);
@@ -140,8 +142,8 @@ void TextParser::parseLine_(ccp* line, H& h, Tail&... tail) const {
 
 template <size_t n>
 void TextParser::parse(char (&result)[n], ccpc begin, ccpc end) const {
-  char* p = result;
-  for (ccp q = begin; p < result + n - 1 and q < end; p++, q++) {
+  char* p {result};
+  for (ccp q {begin}; p < result + n - 1 and q < end; p++, q++) {
     *p = *q;
   }
   *p = 0;
@@ -156,7 +158,7 @@ template <class T, ccp* labels>
 void TextParser::parse(
     Category<T, labels>& result, ccpc begin, ccpc end) const {
   result.value = -1;
-  for (size_t i = 0; labels[i]; i++) {
+  for (size_t i {0}; labels[i]; i++) {
     if (strmatch(begin, end, labels[i])) {
       result.value = i;
       return;
@@ -177,6 +179,6 @@ void TextParser::parse(T& result, ccpc begin, ccpc) const {
 
 template <class... Args>
 void TextParser::parseLine(ccpc line, Args&... args) const {
-  ccp line_ = line;
+  ccp line_ {line};
   parseLine_(&line_, args...);
 }

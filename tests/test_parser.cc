@@ -4,14 +4,14 @@
 
 #include "../src/textparser.h"
 
-char const truth[] = "TRUE";
-char const* labels[] = {"red", "green", "blue", nullptr};
+char const truth[] {"TRUE"};
+char const* labels[] {"red", "green", "blue", nullptr};
 TextParser parser(", ");
 
 
 TEST_CASE("Integer", "[basic]") {
   int a;
-  ccpc line = "3";
+  ccpc line {"3"};
 
   parser.parse(a, line, line + 1);
   REQUIRE(a == 3);
@@ -19,7 +19,7 @@ TEST_CASE("Integer", "[basic]") {
 
 TEST_CASE("Short unsigned integer", "[basic]") {
   short unsigned int a;
-  ccpc line = "3";
+  ccpc line {"3"};
 
   parser.parse(a, line, line + 1);
   REQUIRE(a == 3);
@@ -27,7 +27,7 @@ TEST_CASE("Short unsigned integer", "[basic]") {
 
 TEST_CASE("Long long integer", "[basic]") {
   long long int a;
-  ccpc line = "3";
+  ccpc line {"3"};
 
   parser.parse(a, line, line + 1);
   REQUIRE(a == 3);
@@ -35,7 +35,7 @@ TEST_CASE("Long long integer", "[basic]") {
 
 TEST_CASE("Double", "[basic]") {
   double a;
-  ccpc line = "3.1";
+  ccpc line {"3.1"};
 
   parser.parse(a, line, line + 3);
   REQUIRE(a == 3.1);
@@ -43,7 +43,7 @@ TEST_CASE("Double", "[basic]") {
 
 TEST_CASE("Float", "[basic]") {
   float a;
-  ccpc line = "3.1";
+  ccpc line {"3.1"};
 
   parser.parse(a, line, line + 3);
   REQUIRE(a == 3.1f);
@@ -51,7 +51,7 @@ TEST_CASE("Float", "[basic]") {
 
 TEST_CASE("Hexadecimal number", "[basic]") {
   Number<int, 16> a;
-  ccpc line = "0x1f";
+  ccpc line {"0x1f"};
 
   parser.parse(a, line, line + 4);
   REQUIRE(a.value == 31);
@@ -59,7 +59,7 @@ TEST_CASE("Hexadecimal number", "[basic]") {
 
 TEST_CASE("Binary number", "[basic]") {
   Number<uint8_t, 2> a;
-  ccpc line = "11111";
+  ccpc line {"11111"};
 
   parser.parse(a, line, line + 5);
   REQUIRE(a.value == 31);
@@ -67,7 +67,7 @@ TEST_CASE("Binary number", "[basic]") {
 
 TEST_CASE("Char", "[basic]") {
   char a;
-  ccpc line = "a";
+  ccpc line {"a"};
 
   parser.parse(a, line, line + 1);
   REQUIRE(a == 'a');
@@ -75,7 +75,7 @@ TEST_CASE("Char", "[basic]") {
 
 TEST_CASE("Bool as integer", "[basic]") {
   bool a;
-  ccp line = "1";
+  ccp line {"1"};
 
   parser.parse(a, line, line + 1);
   REQUIRE(a);
@@ -95,7 +95,7 @@ TEST_CASE("Bool as integer", "[basic]") {
 
 TEST_CASE("Bool as text", "[basic]") {
   Bool<truth> a;
-  ccp line = "TRUE";
+  ccp line {"TRUE"};
 
   parser.parse(a, line, line + 4);
   REQUIRE(a.value);
@@ -115,7 +115,7 @@ TEST_CASE("Bool as text", "[basic]") {
 
 TEST_CASE("Category", "[basic]") {
   Category<int, labels> a;
-  ccp line = "red";
+  ccp line {"red"};
 
   parser.parse(a, line, line + 3);
   REQUIRE(a.value == 0);
@@ -135,7 +135,7 @@ TEST_CASE("Category", "[basic]") {
 
 TEST_CASE("C string", "[basic]") {
   char a[10];
-  ccpc line = "three";
+  ccpc line {"three"};
 
   parser.parse(a, line, line + 5);
   REQUIRE(not strcmp(a, "three"));
@@ -143,7 +143,7 @@ TEST_CASE("C string", "[basic]") {
 
 TEST_CASE("C string too long", "[basic]") {
   char a[4];
-  ccpc line = "three";
+  ccpc line {"three"};
 
   parser.parse(a, line, line + 5);
   REQUIRE(not strcmp(a, "thr"));
@@ -195,7 +195,7 @@ TEST_CASE("Line with mixed types", "[line]") {
 }
 
 TEST_CASE("Line with mixed boolean types", "[line]") {
-  ccpc line = "1, 0, TRUE, FALSE";
+  ccpc line {"1, 0, TRUE, FALSE"};
   bool a[2];
   Bool<truth> b[2];
 
@@ -208,7 +208,7 @@ TEST_CASE("Line with mixed boolean types", "[line]") {
 
 
 TEST_CASE("Line too short for array", "[line]") {
-  int a[3] = {1, 1, 1};
+  int a[3] {1, 1, 1};
 
   parser.parseLine("3, 1", a);
   REQUIRE(a[0] == 3);
@@ -219,7 +219,7 @@ TEST_CASE("Line too short for array", "[line]") {
 TEST_CASE("Line too short for mixed types", "[line]") {
   char a[10];
   int b;
-  double c = 1.0;
+  double c {1.0};
 
   parser.parseLine("three, 1", a, b, c);
   REQUIRE(not strcmp(a, "three"));
@@ -228,27 +228,27 @@ TEST_CASE("Line too short for mixed types", "[line]") {
 }
 
 TEST_CASE("Empty line", "[line]") {
-  bool a = true;
+  bool a {true};
   parser.parseLine("", a);
   REQUIRE(not a);
 
-  char b = 1;
+  char b {1};
   parser.parseLine("", b);
   REQUIRE(not b);
 
-  float c = 1;
+  float c {1};
   parser.parseLine("", c);
   REQUIRE(not c);
 
-  int d = 1;
+  int d {1};
   parser.parseLine("", d);
   REQUIRE(not d);
 
-  char e[2] = "1";
+  char e[2] {"1"};
   parser.parseLine("", e);
   REQUIRE(not strlen(e));
 
-  int f[2] = {1, 1};
+  int f[2] {1, 1};
   parser.parseLine("", f);
   REQUIRE(not (f[0] or f[1]));
 }

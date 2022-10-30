@@ -3,10 +3,10 @@
 
 void noLib() {
   int a[5];
-  char const line[] = "1, 2, 3, 4, 5";
-  char* endptr = const_cast<char*>(line);
+  char const line[] {"1, 2, 3, 4, 5"};
+  char* endptr {const_cast<char*>(line)};
 
-  for (size_t i = 0; i < 5; i++) {
+  for (size_t i {0}; i < 5; i++) {
     a[i] = strtol(endptr, &endptr, 10);
     (*endptr) += 2;
   }

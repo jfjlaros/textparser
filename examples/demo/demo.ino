@@ -1,7 +1,7 @@
 #include <textparser.h>
 
-char const truth[] = "Yes";
-char const* labels[] = {"red", "green", "blue", nullptr};
+char const truth[] {"Yes"};
+char const* labels[] {"red", "green", "blue", nullptr};
 
 
 void demo1() {
