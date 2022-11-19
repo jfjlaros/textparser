@@ -127,8 +127,8 @@ void TextParser::parseLine_(ccp* line, char (&h)[n], Tail&... tail) const {
 
 template <class T, size_t n, class... Tail>
 void TextParser::parseLine_(ccp* line, T (&h)[n], Tail&... tail) const {
-  for (size_t i {0}; i < n; i++) {
-    parseField_(line, h[i]);
+  for (T& element: h) {
+    parseField_(line, element);
   }
   parseLine_(line, tail...);
 }
