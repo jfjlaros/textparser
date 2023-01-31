@@ -1,17 +1,11 @@
 #include "textparser.h"
 
 
-void TextParser::consume_(ccp* line) const {
-  for (ccp p {delimiter_}; *p and **line and *p == **line; p++, (*line)++);
-}
+TextParser::TextParser(ccpc delimiter)
+    : delimiter_ {delimiter} {}
 
-ccp TextParser::findEnd_(ccp line) const {
-  ccp end {strstr(line, delimiter_)};
-  if (not (end or (eol_ and (end = strstr(line, eol_))))) {
-    return line + strlen(line);
-  }
-  return end;
-}
+TextParser::TextParser(ccpc delimiter, ccpc eol)
+    : delimiter_ {delimiter}, eol_ {eol} {}
 
 
 void TextParser::parse(char& result, ccpc begin, ccpc end) const {
@@ -27,4 +21,17 @@ void TextParser::parse(double& result, ccpc begin, ccpc) const {
 
 void TextParser::parse(float& result, ccpc begin, ccpc) const {
   result = strtod(begin, nullptr);
+}
+
+
+void TextParser::consume_(ccp* line) const {
+  for (ccp p {delimiter_}; *p and **line and *p == **line; p++, (*line)++);
+}
+
+ccp TextParser::findEnd_(ccp line) const {
+  ccp end {strstr(line, delimiter_)};
+  if (not (end or (eol_ and (end = strstr(line, eol_))))) {
+    return line + strlen(line);
+  }
+  return end;
 }

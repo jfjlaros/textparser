@@ -11,15 +11,13 @@ public:
    *
    * \param[in] delimiter Field delimiter.
    */
-  TextParser(ccpc delimiter)
-    : delimiter_ {delimiter}, eol_ {nullptr} {}
+  TextParser(ccpc delimiter);
 
   /*! \copydoc TextParser(ccpc)
    *
    * \param[in] eol Line delimiter.
    */
-  TextParser(ccpc delimiter, ccpc eol)
-    : delimiter_ {delimiter}, eol_ {eol} {}
+  TextParser(ccpc delimiter, ccpc eol);
 
 
   /*! Parse a field.
@@ -81,13 +79,13 @@ public:
 
   /*! Parse a line.
    *
-   * \tparam Args Output variable types.
+   * \tparam Ts Output variable types.
    *
    * \param[in] line Line to be parsed.
    * \param[out] args Variables to hold the parsed data.
    */
-  template <class... Args>
-    void parseLine(ccpc line, Args&... args) const;
+  template <class... Ts>
+    void parseLine(ccpc line, Ts&... args) const;
 
 private:
   void consume_(ccp*) const;
@@ -97,47 +95,16 @@ private:
     void parseField_(ccp*, T&) const;
 
   inline void parseLine_(ccp*) const;
-  template <size_t n, class... Tail>
-    void parseLine_(ccp*, char (&)[n], Tail&...) const;
-  template <class T, size_t n, class... Tail>
-    void parseLine_(ccp*, T (&)[n], Tail&...) const;
-  template <class H, class... Tail>
-    void parseLine_(ccp*, H&, Tail&...) const;
+  template <size_t n, class... Ts>
+    void parseLine_(ccp*, char (&)[n], Ts&...) const;
+  template <class T, size_t n, class... Ts>
+    void parseLine_(ccp*, T (&)[n], Ts&...) const;
+  template <class T, class... Ts>
+    void parseLine_(ccp*, T&, Ts&...) const;
 
-  ccpc delimiter_ {};
-  ccpc eol_ {};
+  ccp delimiter_ {};
+  ccp eol_ {nullptr};
 };
-
-
-inline void TextParser::parseLine_(ccp*) const {}
-
-template <class T>
-void TextParser::parseField_(ccp* line, T& data) const {
-  ccpc end {findEnd_(*line)};
-  parse(data, *line, end);
-  *line = end;
-  consume_(line);
-}
-
-template <size_t n, class... Tail>
-void TextParser::parseLine_(ccp* line, char (&h)[n], Tail&... tail) const {
-  parseField_(line, h);
-  parseLine_(line, tail...);
-}
-
-template <class T, size_t n, class... Tail>
-void TextParser::parseLine_(ccp* line, T (&h)[n], Tail&... tail) const {
-  for (T& element: h) {
-    parseField_(line, element);
-  }
-  parseLine_(line, tail...);
-}
-
-template <class H, class... Tail>
-void TextParser::parseLine_(ccp* line, H& h, Tail&... tail) const {
-  parseField_(line, h);
-  parseLine_(line, tail...);
-}
 
 
 template <size_t n>
@@ -177,8 +144,40 @@ void TextParser::parse(T& result, ccpc begin, ccpc) const {
 }
 
 
-template <class... Args>
-void TextParser::parseLine(ccpc line, Args&... args) const {
+template <class... Ts>
+void TextParser::parseLine(ccpc line, Ts&... args) const {
   ccp line_ {line};
   parseLine_(&line_, args...);
+}
+
+
+template <class T>
+void TextParser::parseField_(ccp* line, T& data) const {
+  ccpc end {findEnd_(*line)};
+  parse(data, *line, end);
+  *line = end;
+  consume_(line);
+}
+
+
+inline void TextParser::parseLine_(ccp*) const {}
+
+template <size_t n, class... Ts>
+void TextParser::parseLine_(ccp* line, char (&arr)[n], Ts&... tail) const {
+  parseField_(line, arr);
+  parseLine_(line, tail...);
+}
+
+template <class T, size_t n, class... Ts>
+void TextParser::parseLine_(ccp* line, T (&arr)[n], Ts&... tail) const {
+  for (T& element: arr) {
+    parseField_(line, element);
+  }
+  parseLine_(line, tail...);
+}
+
+template <class T, class... Ts>
+void TextParser::parseLine_(ccp* line, T& head, Ts&... tail) const {
+  parseField_(line, head);
+  parseLine_(line, tail...);
 }
