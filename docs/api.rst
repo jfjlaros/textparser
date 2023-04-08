@@ -9,8 +9,8 @@ API documentation
 Type definitions
 ----------------
 
-.. doxygentypedef:: ccp
-.. doxygentypedef:: ccpc
+.. doxygentypedef:: CCP
+.. doxygentypedef:: CCPC
 
 
 Functions

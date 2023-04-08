@@ -1,8 +1,8 @@
 #include "texttypes.h"
 
-bool strmatch(ccpc begin, ccpc end, ccpc str) {
-  ccp p {begin};
-  ccp q {str};
+bool strmatch(CCPC begin, CCPC end, CCPC str) {
+  CCP p {begin};
+  CCP q {str};
   for (; p < end and *q and *p == *q; p++, q++);
   return p == end and not *q;
 }

@@ -2,8 +2,8 @@
 
 #include <stdlib.h>
 
-using ccp = char const*;  //!< Pointer to a constant string.
-using ccpc = ccp const;   //!< Constant pointer to a constant string.
+using CCP = char const*;  //!< Pointer to a constant string.
+using CCPC = CCP const;   //!< Constant pointer to a constant string.
 
 /*! Generic container.
  *
@@ -26,7 +26,7 @@ struct Number : Container_<T> {};
  *
  * \tparam truth Truth value.
  */
-template <ccp truth>
+template <CCP truth>
 struct Bool : Container_<bool> {};
 
 /*! Category.
@@ -34,7 +34,7 @@ struct Bool : Container_<bool> {};
  * \tparam T Integer type.
  * \tparam labels Labels.
  */
-template <class T, ccp* labels>
+template <class T, CCP* labels>
 struct Category : Container_<T> {};
 
 
@@ -44,4 +44,4 @@ struct Category : Container_<T> {};
  * \param[in] end Pointer to end of the first C string.
  * \param[in] str Pointer to the second C string.
  */
-bool strmatch(ccpc begin, ccpc end, ccpc str);
+bool strmatch(CCPC begin, CCPC end, CCPC str);
