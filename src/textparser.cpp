@@ -25,7 +25,7 @@ void TextParser::parse(float& result, CCPC begin, CCPC) const {
 
 
 void TextParser::consume_(CCP* line) const {
-  for (CCP p {delimiter_}; *p and **line and *p == **line; p++, (*line)++);
+  for (CCP p {delimiter_}; *p and **line and *p == **line; ++p, ++(*line));
 }
 
 CCP TextParser::findEnd_(CCP line) const {

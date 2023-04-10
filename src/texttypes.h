@@ -14,6 +14,7 @@ struct Container_ {
   T value;  //!< Value.
 };
 
+
 /*! Integer number.
  *
  * \tparam T Integer type.

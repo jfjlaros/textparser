@@ -110,7 +110,7 @@ private:
 template <size_t n>
 void TextParser::parse(char (&result)[n], CCPC begin, CCPC end) const {
   char* p {result};
-  for (CCP q {begin}; p < result + n - 1 and q < end; p++, q++) {
+  for (CCP q {begin}; p < result + n - 1 and q < end; ++p, ++q) {
     *p = *q;
   }
   *p = 0;
@@ -125,7 +125,7 @@ template <class T, CCP* labels>
 void TextParser::parse(
     Category<T, labels>& result, CCPC begin, CCPC end) const {
   result.value = -1;
-  for (size_t i {0}; labels[i]; i++) {
+  for (size_t i {0}; labels[i]; ++i) {
     if (strmatch(begin, end, labels[i])) {
       result.value = i;
       return;
